@@ -1,5 +1,7 @@
 # Notebook para o Kaggle
 
+> ✅ Já publicado: [kaggle.com/code/brenosilvabarros/an-lise-de-chamados-de-service-desk-itsm-real](https://www.kaggle.com/code/brenosilvabarros/an-lise-de-chamados-de-service-desk-itsm-real)
+
 `analise_eda_kaggle.ipynb` é a versão **exploratória** (pandas + matplotlib) deste projeto, pensada para o Kaggle — uma narrativa de análise de dados, diferente da [versão de engenharia](../README.md) (pipeline Bronze/Silver/Gold em SQL/DuckDB). Já vem executado, com os gráficos prontos, usando a base real da UCI.
 
 ## Como subir no Kaggle
