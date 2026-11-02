@@ -4,6 +4,8 @@
 
 ![Python](https://img.shields.io/badge/Python-3.10+-3776AB) ![DuckDB](https://img.shields.io/badge/DuckDB-SQL-FFF000) ![Power BI](https://img.shields.io/badge/Power%20BI-dashboard-F2C811) ![Testes](https://img.shields.io/badge/qualidade-10%2F10%20testes-1baf7a)
 
+> 📓 Prefere uma versão exploratória (pandas + gráficos, no estilo Kaggle) em vez do pipeline de engenharia? Veja [`notebooks/analise_eda_kaggle.ipynb`](notebooks/analise_eda_kaggle.ipynb).
+
 ## 1. O problema
 
 Ferramentas de ITSM (como o ServiceNow) gravam um **log de eventos**: cada chamado aparece várias vezes, uma linha por mudança de estado. Na exportação vêm junto nulos como `?`, datas em texto, prioridade como `"3 - Moderate"`, estados com caixa e espaços inconsistentes e linhas duplicadas.

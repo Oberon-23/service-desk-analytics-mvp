@@ -7,3 +7,4 @@ data/warehouse.duckdb
 .DS_Store
 data/real/*.csv
 data/warehouse_real.duckdb
+notebooks/incident_event_log.csv
