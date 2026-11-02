@@ -132,5 +132,5 @@ service-desk-analytics-mvp/
 
 ## Autor
 
-**Breno Silva**: Analista de Suporte Corporativo · ponto focal de qualidade · Engenharia de Produção · Pós em Data Analytics & AI
+**Breno Silva**
 [LinkedIn](https://www.linkedin.com/in/brenosilvarangel) · [GitHub](https://github.com/Oberon-23) · [Kaggle](https://www.kaggle.com/brenosilvabarros)
