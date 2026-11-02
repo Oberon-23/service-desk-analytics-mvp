@@ -1,0 +1,41 @@
+categoria_sk;categoria;subcategoria
+1;Acesso e Senha;Conta bloqueada
+2;Acesso e Senha;Permissão de acesso
+3;Acesso e Senha;Reset de senha
+4;Dúvidas e Orientação;Orientação de uso
+5;Dúvidas e Orientação;Treinamento
+6;E-mail e Colaboração;Caixa compartilhada
+7;E-mail e Colaboração;Outlook
+8;E-mail e Colaboração;Teams
+9;Hardware e Periféricos;Impressora
+10;Hardware e Periféricos;Monitor/Periférico
+11;Hardware e Periféricos;Notebook
+12;Não informado;Acesso a relatório
+13;Não informado;Atualização
+14;Não informado;Caixa compartilhada
+15;Não informado;Conta bloqueada
+16;Não informado;ERP
+17;Não informado;Impressora
+18;Não informado;Instalação de software
+19;Não informado;Licença
+20;Não informado;Link remoto
+21;Não informado;Monitor/Periférico
+22;Não informado;Notebook
+23;Não informado;Orientação de uso
+24;Não informado;Outlook
+25;Não informado;Permissão de acesso
+26;Não informado;Reset de senha
+27;Não informado;ServiceNow
+28;Não informado;Teams
+29;Não informado;Treinamento
+30;Não informado;VPN
+31;Não informado;Wi-Fi
+32;Rede e Conectividade;Link remoto
+33;Rede e Conectividade;VPN
+34;Rede e Conectividade;Wi-Fi
+35;Sistemas Corporativos;Acesso a relatório
+36;Sistemas Corporativos;ERP
+37;Sistemas Corporativos;ServiceNow
+38;Software e Instalação;Atualização
+39;Software e Instalação;Instalação de software
+40;Software e Instalação;Licença
