@@ -85,7 +85,36 @@ Toda execução roda `src/quality_checks.py`, que gera [`docs/quality_report.md`
 
 > Por que sintético por padrão? Para que qualquer pessoa clone o repositório e rode em segundos, e para deixar claro que **nenhum dado de cliente ou empregador foi usado**.
 
-## 6. Como executar
+## 6. Resultado rodando com a base real (UCI)
+
+O mesmo SQL de Silver/Gold (sem nenhuma alteração) foi rodado contra o CSV real de 141.712 eventos. Resultado: **24.918 incidentes**, de fev/2016 a fev/2017, de uma instância ServiceNow anonimizada.
+
+| | Achado | Leitura |
+|---|---|---|
+| 📊 | Um único mês (mar/2016) concentrou **8.995 chamados** — quase o dobro do mês seguinte e **~150x** a média dos meses finais do período. | O log real tem uma janela de alto volume seguida por uma cauda quase vazia — provavelmente o período em que a instância estava em uso ativo de verdade. |
+| 📈 | As **3 subcategorias mais comuns** (de ~190 no total, todas anonimizadas pela UCI) respondem por **24,6%** dos chamados — bem menos concentrado que no cenário sintético. | Demanda real tende a ser mais pulverizada entre categorias do que um cenário didático. |
+| 🔀 | O grupo com mais retrabalho reatribui um chamado em média **2,4x** (n=167), e **22%** de todos os chamados resolvidos passam por 2+ reatribuições. | Nível de retrabalho real é material — vale investigar critérios de triagem/roteamento. |
+| 🕒 | O pico de abertura é **segunda a quinta, 8h–11h e 13h–16h**; fins de semana praticamente não têm chamados. | Confirma o padrão clássico de suporte corporativo (sem plantão de fim de semana). |
+| ⚠️ | O SLA recalculado com os alvos-padrão do pipeline (4h/8h/24h/72h por prioridade) bate com o campo original `made_sla` em apenas **81,4%** dos casos — abaixo do limiar de 95% do teste de qualidade (ver seção 4), que passa com os dados sintéticos. | **Achado honesto, não escondido**: a UCI não documenta a política de SLA real dessa organização. Os alvos usados no pipeline são uma suposição razoável (padrão ITIL), não o SLA oficial dela — por isso o teste foi desenhado para *alertar* essa divergência, em vez de forçar concordância. Em um cenário real, o próximo passo seria validar os alvos de SLA com o time de negócio antes de usar esse indicador para decisão. |
+
+<p align="center">
+  <img src="docs/img_real/01_volume_mensal.png" width="49%"/>
+  <img src="docs/img_real/02_pareto_subcategorias.png" width="49%"/>
+  <img src="docs/img_real/03_pico_dia_hora.png" width="49%"/>
+  <img src="docs/img_real/04_retrabalho_grupos.png" width="49%"/>
+</p>
+
+**Como reproduzir:** baixe `incident_event_log.csv` em [archive.ics.uci.edu/dataset/498](https://archive.ics.uci.edu/dataset/498/incident+management+process+enriched+event+log) (licença CC BY 4.0), salve em `data/real/incident_event_log.csv` e rode:
+
+```bash
+python src/run_real_analysis.py          # Bronze -> Silver -> Gold, saída em data/gold_real/ e powerbi_real/
+python src/quality_checks.py --real      # testes de qualidade -> docs/quality_report_real.md
+python src/charts_real.py                # gráficos em docs/img_real/
+```
+
+> O CSV real (~46 MB) não é commitado no repositório — só os resultados agregados (pequenos) ficam versionados em `data/gold_real/` e `powerbi_real/`.
+
+## 7. Como executar
 
 ```bash
 git clone https://github.com/Oberon-23/service-desk-analytics-mvp.git
@@ -99,33 +128,34 @@ python src/quality_checks.py       # 3. testes de qualidade
 python src/charts.py               # 4. gráficos em docs/img
 ```
 
-**Com os dados reais do UCI:** baixe `incident_event_log.csv` no link da seção 5 e rode
-`python src/pipeline.py --input caminho/para/incident_event_log.csv`.
-
-> No dataset real, as datas e os rótulos de categoria têm outro formato (por exemplo `Category 55`). As categorias aparecem codificadas, e talvez seja preciso ajustar o `strptime` em `sql/silver.sql`.
+**Com os dados reais do UCI:** o pipeline já roda sem ajuste algum contra o CSV real — o formato de data (`dd/mm/AAAA HH:MM`) e de prioridade (`"3 - Moderate"`) é o mesmo do dataset sintético. Use `python src/pipeline.py --input caminho/para/incident_event_log.csv` para processar no mesmo lugar dos dados sintéticos, ou `python src/run_real_analysis.py` para manter os dois resultados separados (ver seção 6).
 
 **Power BI:** veja [`docs/guia_power_bi.md`](docs/guia_power_bi.md).
 
-## 7. Estrutura do repositório
+## 8. Estrutura do repositório
 
 ```
 service-desk-analytics-mvp/
 ├── src/
 │   ├── generate_synthetic.py   # gerador de dados (reprodutível)
-│   ├── pipeline.py             # orquestra Bronze -> Silver -> Gold
+│   ├── pipeline.py             # orquestra Bronze -> Silver -> Gold (dados sintéticos por padrão)
+│   ├── run_real_analysis.py    # mesmo pipeline, saída separada, para a base real da UCI
 │   ├── quality_checks.py       # testes de qualidade de dados
-│   └── charts.py               # gráficos para README/LinkedIn
+│   ├── charts.py                # gráficos (dados sintéticos) para README/LinkedIn
+│   └── charts_real.py          # gráficos a partir do resultado com a base real
 ├── sql/
-│   ├── silver.sql              # limpeza + Star Schema
-│   └── gold.sql                # tabelas analíticas
-├── data/{raw,bronze,silver,gold}/
-├── powerbi/                    # CSVs (separador ;) prontos para importar
-└── docs/                       # dicionário, qualidade, guia Power BI, imagens
+│   ├── silver.sql              # limpeza + Star Schema (usado nos dois cenários)
+│   └── gold.sql                # tabelas analíticas (usado nos dois cenários)
+├── data/{raw,bronze,silver,gold}/       # dados sintéticos (o CSV bruto não é commitado)
+├── data/{real,gold_real}/               # base real: CSV bruto não commitado; gold_real/ é versionado
+├── powerbi/, powerbi_real/              # CSVs (separador ;) prontos para importar
+└── docs/                                # dicionário, qualidade, guia Power BI, imagens (img/ sintético, img_real/ real)
 ```
 
-## 8. Limitações e próximos passos
+## 9. Limitações e próximos passos
 
 - O SLA é calculado em **horas corridas**. O próximo passo é considerar horário comercial e feriados.
+- Os alvos de SLA por prioridade (4h/8h/24h/72h) são uma suposição razoável, não a política oficial da organização por trás da base real — ver o achado da seção 6.
 - O sentimento do texto livre (descrição do chamado) não está no escopo; poderia vir com NLP.
 - Previsão de volume semanal para dimensionar a equipe (série temporal).
 - Orquestração agendada (GitHub Actions) e migração para Databricks/Delta Lake.

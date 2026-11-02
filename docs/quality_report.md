@@ -1,6 +1,6 @@
 # Relatório de qualidade de dados
 
-Gerado em 02/11/2026 08:44
+Gerado em 02/11/2026 12:25
 
 | Teste | Resultado | Detalhe |
 |---|---|---|

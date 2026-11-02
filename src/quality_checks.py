@@ -1,7 +1,9 @@
 """
 Testes de qualidade de dados. Gera docs/quality_report.md e retorna código 1 se algo falhar.
-Uso: python src/quality_checks.py
+Uso: python src/quality_checks.py                 # base sintética (padrão)
+     python src/quality_checks.py --real           # base real (data/warehouse_real.duckdb)
 """
+import argparse
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -9,7 +11,12 @@ from pathlib import Path
 import duckdb
 
 ROOT = Path(__file__).resolve().parents[1]
-con = duckdb.connect(str(ROOT / "data" / "warehouse.duckdb"), read_only=True)
+ap = argparse.ArgumentParser()
+ap.add_argument("--real", action="store_true", help="roda contra data/warehouse_real.duckdb")
+args = ap.parse_args()
+db_name = "warehouse_real.duckdb" if args.real else "warehouse.duckdb"
+report_name = "quality_report_real.md" if args.real else "quality_report.md"
+con = duckdb.connect(str(ROOT / "data" / db_name), read_only=True)
 
 
 def q(sql):
@@ -59,6 +66,6 @@ for name, ok, detail in checks:
     print(("PASS" if ok else "FAIL"), "-", name, "|", detail)
 
 (ROOT / "docs").mkdir(exist_ok=True)
-(ROOT / "docs" / "quality_report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+(ROOT / "docs" / report_name).write_text("\n".join(lines) + "\n", encoding="utf-8")
 print(f"\n{len(checks) - failed}/{len(checks)} testes passaram")
 sys.exit(1 if failed else 0)

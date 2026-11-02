@@ -5,3 +5,5 @@ data/raw/*.csv
 data/warehouse.duckdb
 *.duckdb.wal
 .DS_Store
+data/real/*.csv
+data/warehouse_real.duckdb
